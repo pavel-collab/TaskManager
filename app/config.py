@@ -1,10 +1,9 @@
-from pydantic import  BaseSettings
+from pydantic_settings import  BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL = "postgresql://user:password@localhost/task_manager_db"
-    SECRET_KEY = ""
-    
+    DATABASE_URL: str = "postgresql://postgres:1234@localhost:5432/postgres"
+    SECRET_KEY: str = ""
     class Config:
-        env_file = ".env"
+        env_file: str = ".env"
 
 settings = Settings()
