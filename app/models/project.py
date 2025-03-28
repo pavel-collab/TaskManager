@@ -10,4 +10,4 @@ class Project(Base):
     description = Column(String)
     owner_id = Column(Integer, ForeignKey("users.id"))
     
-    owner = relationship("User", back_populates="projects")
+    # _owner = relationship("User", back_populates="projects")

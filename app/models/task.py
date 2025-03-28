@@ -18,5 +18,5 @@ class Task(Base):
     status = Column(Enum(TaskStatus), default=TaskStatus.TODO)
     project_id = Column(Integer, ForeignKey("projects.id"))
     
-    project = relationship("Project", back_populates="tasks")
+    # _project = relationship("Project", back_populates="tasks")
     
