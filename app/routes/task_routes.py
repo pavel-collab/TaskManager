@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models.task import Task, TaskStatus
 from app.models.project import Project
-from pydantic_settings import BaseModel
+from pydantic import BaseModel
 
 router = APIRouter()
 

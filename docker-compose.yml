@@ -9,8 +9,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf  # Монтируем файл конфигурации
+      - ./db_data:/var/lib/postgresql/data
+      - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf  # Монтируем файл конфигурации
     # command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]  # Указываем путь к конфигурационному файлу
     ports:
       - "5432:5432"

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models.user import User
-from pydantic_settings import BaseModel
+from pydantic import BaseModel
 from passlib.context import CryptContext
 
 # Создание маршрутизатора и шифрования паролей
