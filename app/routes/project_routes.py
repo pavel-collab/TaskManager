@@ -15,7 +15,12 @@ class ProjectCreate(BaseModel):
 # Функция для добавления нового проекта
 @router.post("/projects/")
 def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
-    new_project = Project(title=project.title, description=project.description, owner_id=project.owner_id)
+    new_project = Project(title=project.title, 
+                          description=project.description, 
+                          owner_id=project.owner_id,
+                          status=project.status,
+                          project_start_date=project.project_start_date,
+                          project_end_date=project.project_end_date)
     db.add(new_project)
     db.commit()
     db.refresh(new_project)

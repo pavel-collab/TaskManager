@@ -22,7 +22,14 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
-    new_task = Task(title=task.title, description=task.description, status=task.status, project_id=task.project_id)
+    new_task = Task(title=task.title, 
+                    description=task.description, 
+                    status=task.status, 
+                    project_id=task.project_id,
+                    complexity=task.complexity,
+                    assign_id=task.assign_id,
+                    task_start_date=task.task_start_date,
+                    task_end_date=task.task_end_date)
     db.add(new_task)
     db.commit()
     db.refresh(new_task)

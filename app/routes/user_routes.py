@@ -19,7 +19,10 @@ class UserCreate(BaseModel):
 @router.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     hashed_password = pwd_context.hash(user.password)
-    db_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    db_user = User(username=user.username, 
+                   email=user.email, 
+                   hashed_password=hashed_password,
+                   role=user.role)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
