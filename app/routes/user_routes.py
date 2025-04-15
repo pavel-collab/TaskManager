@@ -9,6 +9,14 @@ from passlib.context import CryptContext
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+# Функция для хэширования паролей
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+# Функция для проверки пароля
+def verify_password(plain_password: str, hashed_password: str):
+    return pwd_context.verify(plain_password, hashed_password)
+
 # Схема для валидации данных пользователя
 class UserCreate(BaseModel):
     username: str
@@ -18,7 +26,7 @@ class UserCreate(BaseModel):
 # Функция добавления нового пользователя
 @router.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    hashed_password = pwd_context.hash(user.password)
+    hashed_password = hash_password(user.password)
     db_user = User(username=user.username, 
                    email=user.email, 
                    hashed_password=hashed_password,
