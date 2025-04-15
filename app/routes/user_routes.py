@@ -15,6 +15,10 @@ class UserCreate(BaseModel):
     email: str
     password: str
     role: str
+    
+class UserUpdate(BaseModel):
+    username: str = None
+    email: str = None
 
 # Функция добавления нового пользователя
 @router.post("/users/")
@@ -42,3 +46,31 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+# Функция для обновления информации о пользователе
+@router.put("/users/{user_id}")
+def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Обновляем только те поля, которые были предоставлены
+    user_data = user_update.dict(exclude_unset=True)
+    for key, value in user_data.items():
+        if value is not None:
+            setattr(db_user, key, value)
+    
+    db.commit()
+    db.refresh(db_user)
+    return {"message": "User updated", "user": db_user}
+
+# Функция для удаления пользователя
+@router.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    db.delete(db_user)
+    db.commit()
+    return {"message": "User deleted"}

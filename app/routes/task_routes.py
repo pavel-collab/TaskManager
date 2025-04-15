@@ -53,3 +53,64 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
+
+# Функция для обновления задачи
+@router.put("/tasks/{task_id}")
+def update_task(task_id: int, task_update: TaskCreate, db: Session = Depends(get_db)):
+    """
+    Update an existing task by ID.
+    
+    Args:
+        task_id: The ID of the task to update
+        task_update: The new task data
+        db: Database session
+        
+    Returns:
+        Updated task information
+        
+    Raises:
+        HTTPException: If task not found or project not found
+    """
+    # Check if project exists
+    project = db.query(Project).filter(Project.id == task_update.project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Find and update the task
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    # Update task fields
+    task.title = task_update.title
+    task.description = task_update.description
+    task.status = task_update.status
+    task.project_id = task_update.project_id
+    
+    db.commit()
+    db.refresh(task)
+    return {"message": "Task updated", "task": task}
+
+# Функция для удаления задачи
+@router.delete("/tasks/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    """
+    Delete a task by ID.
+    
+    Args:
+        task_id: The ID of the task to delete
+        db: Database session
+        
+    Returns:
+        Success message
+        
+    Raises:
+        HTTPException: If task not found
+    """
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    db.delete(task)
+    db.commit()
+    return {"message": "Task deleted"}

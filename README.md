@@ -1,7 +1,7 @@
 ### Запуск
 Запускаем базу данных в докере
 ```
-docker-compose up
+docker-compose up -d
 ```
 Можно убедиться, что база поднялась
 ```
@@ -10,7 +10,12 @@ docker exec -it task-trasker-db psql postgresql://postgres:1234@localhost:5432/
 
 Запускаем приложение
 ```
-uvicorn app.main:app --reload
+uvicorn main:app --reload
+```
+
+Используем скрипт, чтобы заполнить базу данными для демонстрации.
+```
+./scripts/fill_db.py
 ```
 
 ### Using Swagger UI
