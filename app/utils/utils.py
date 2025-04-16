@@ -10,7 +10,7 @@ class Role(enum.Enum):
     LEAD = "LEAD"
     DEVELOPER = "DEVELOPER"
     TESTER = "TESTER"
-    DOC = "DOC_WRITER"
+    # DOCUMENTATOR = "DOCUMENTATOR"
     MANAGER = "MANAGER"
     DELIVERY = "DELIVERY"
 

@@ -14,6 +14,7 @@ class UserCreate(BaseModel):
     username: str
     email: str
     password: str
+    role: str
 
 # Функция добавления нового пользователя
 @router.post("/users/")

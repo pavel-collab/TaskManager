@@ -14,6 +14,10 @@ class TaskCreate(BaseModel):
     description: str
     status: Status
     project_id: int
+    complexity: str
+    assign_id: int
+    task_start_date: str
+    task_end_date: str
 
 # Функция для добавления новой задачи
 @router.post("/tasks/")

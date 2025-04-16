@@ -11,6 +11,9 @@ class ProjectCreate(BaseModel):
     title: str
     description: str
     owner_id: int
+    status: str
+    project_start_date: str
+    project_end_date: str
 
 # Функция для добавления нового проекта
 @router.post("/projects/")
