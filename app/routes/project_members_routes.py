@@ -53,7 +53,7 @@ def add_project_member(
         )
 
 
-@router.get("/project/{project_id}", response_model=List[ProjectMemberResponse])
+@router.get("/project_members/project/{project_id}", response_model=List[ProjectMemberResponse])
 def get_project_members(
     project_id: int, 
     role: Optional[Role] = None,
@@ -70,20 +70,9 @@ def get_project_members(
     members = query.all()
     return members
 
-
-@router.get("/user/{user_id}", response_model=List[ProjectMemberResponse])
-def get_user_projects(
-    user_id: int,
-    db: Session = Depends(get_db)
-):
-    """
-    Get all projects a user is a member of.
-    """
-    members = db.query(ProjectMembers).filter(ProjectMembers.user_id == user_id).all()
-    return members
-
-
-@router.put("/{project_id}/{user_id}", response_model=ProjectMemberResponse)
+#TODO: сделать через аргументы запроса + запросы выше тоже
+#TODO: пересмотреть метод обновления (сейчас надо передавать целый json объект), надо сделать так, чтобы передавать токлько роль, для этого надо изменить структуру ProjectMemberUpdate
+@router.put("/project_members/{project_id}/{user_id}", response_model=ProjectMemberResponse)
 def update_project_member(
     project_id: int,
     user_id: int,
@@ -109,8 +98,8 @@ def update_project_member(
     db.refresh(db_member)
     return db_member
 
-
-@router.delete("/{project_id}/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+#TODO: пересмотреть логику удаления (по какому признаку лучше всего удалять)
+@router.delete("/project_members/{project_id}/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_project_member(
     project_id: int,
     user_id: int,

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.db import get_db
@@ -39,7 +39,7 @@ def create_comment(comment: TaskCommentCreate, db: Session = Depends(get_db)):
     db.refresh(db_comment)
     return db_comment
 
-@router.get("/{comment_id}", response_model=TaskCommentResponse)
+@router.get("/comments/{comment_id}", response_model=TaskCommentResponse)
 def read_comment(comment_id: int, db: Session = Depends(get_db)):
     """
     Get a specific comment by ID.
@@ -49,7 +49,8 @@ def read_comment(comment_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Comment not found")
     return db_comment
 
-@router.get("/task/{task_id}", response_model=List[TaskCommentResponse])
+#TODO: вот тут точно можно использовать id задачи как параметр запроса, а не как часть запроса
+@router.get("/comments/task/{task_id}", response_model=List[TaskCommentResponse])
 def read_comments_by_task(task_id: int, db: Session = Depends(get_db)):
     """
     Get all comments for a specific task.

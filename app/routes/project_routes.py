@@ -64,10 +64,11 @@ def update_project(project_id: int, project_update: ProjectUpdate, db: Session =
     db.refresh(db_project)
     return {"message": "Project updated", "project": db_project}
 
+#TODO: добавить каскадное удаление соответствующих сущностей
 # Функция для удаления проекта
-@router.delete("/projects/{project_id}")
-def delete_project(project_id: int, db: Session = Depends(get_db)):
-    db_project = db.query(Project).filter(Project.id == project_id).first()
+@router.delete("/projects/{project_title}")
+def delete_project(project_title: str, db: Session = Depends(get_db)):
+    db_project = db.query(Project).filter(Project.title == project_title).first()
     if not db_project:
         raise HTTPException(status_code=404, detail="Project not found")
     

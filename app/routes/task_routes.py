@@ -46,6 +46,7 @@ def get_tasks(db: Session = Depends(get_db)):
     tasks = db.query(Task).all()
     return tasks
 
+#TODO: изменить: получить задачу по названию
 # Функция для получения конкретной задачи по id
 @router.get("/tasks/{task_id}")
 def get_task(task_id: int, db: Session = Depends(get_db)):
@@ -54,6 +55,7 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
+#TODO: сделать так, чтобы можно было вносить частичные изменения
 # Функция для обновления задачи
 @router.put("/tasks/{task_id}")
 def update_task(task_id: int, task_update: TaskCreate, db: Session = Depends(get_db)):
@@ -91,9 +93,10 @@ def update_task(task_id: int, task_update: TaskCreate, db: Session = Depends(get
     db.refresh(task)
     return {"message": "Task updated", "task": task}
 
+#TODO: добавить каскадное удаление соответствующих сущностей
 # Функция для удаления задачи
-@router.delete("/tasks/{task_id}")
-def delete_task(task_id: int, db: Session = Depends(get_db)):
+@router.delete("/tasks/{task_title}")
+def delete_task(task_title: str, db: Session = Depends(get_db)):
     """
     Delete a task by ID.
     
@@ -107,7 +110,7 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     Raises:
         HTTPException: If task not found
     """
-    task = db.query(Task).filter(Task.id == task_id).first()
+    task = db.query(Task).filter(Task.title == task_title).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     
