@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import get_db
-from app.models.task import Task, TaskStatus
+from app.models.task import Task
+from app.utils.utils import Status
 from app.models.project import Project
 from pydantic import BaseModel
 
@@ -11,7 +12,7 @@ router = APIRouter()
 class TaskCreate(BaseModel):
     title: str
     description: str
-    status: TaskStatus
+    status: Status
     project_id: int
 
 # Функция для добавления новой задачи

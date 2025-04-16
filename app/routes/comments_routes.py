@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.db.database import get_db
+from app.db import get_db
 from pydantic import BaseModel
-from models.comments import TaskComments
+from app.models.comments import TaskComments
 
 # Pydantic models for request/response
 class TaskCommentBase(BaseModel):

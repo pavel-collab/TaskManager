@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime
 from sqlalchemy.orm import relationship
 from app.db import Base
-from utils.utils import Status
+from app.utils.utils import Status
 from datetime import datetime
 
 class Project(Base):

@@ -4,8 +4,8 @@ from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
 
 from app.db import get_db
-from utils.utils import Role
-from models.project_members import ProjectMembers
+from app.utils.utils import Role
+from app.models.project_members import ProjectMembers
 from pydantic import BaseModel
 
 router = APIRouter(
