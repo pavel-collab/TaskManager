@@ -26,13 +26,9 @@ class TaskCommentResponse(TaskCommentBase):
         orm_mode = True
 
 # Router
-router = APIRouter(
-    prefix="/comments",
-    tags=["comments"],
-    responses={404: {"description": "Not found"}},
-)
+router = APIRouter()
 
-@router.post("/", response_model=TaskCommentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/comments", response_model=TaskCommentResponse, status_code=status.HTTP_201_CREATED)
 def create_comment(comment: TaskCommentCreate, db: Session = Depends(get_db)):
     """
     Create a new task comment.

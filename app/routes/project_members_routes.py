@@ -8,11 +8,7 @@ from app.utils.utils import Role
 from app.models.project_members import ProjectMembers
 from pydantic import BaseModel
 
-router = APIRouter(
-    prefix="/project-members",
-    tags=["project-members"],
-)
-
+router = APIRouter()
 
 class ProjectMemberCreate(BaseModel):
     project_id: int
@@ -30,7 +26,7 @@ class ProjectMemberResponse(BaseModel):
     class Config:
         orm_mode = True
 
-@router.post("/", response_model=ProjectMemberResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/project_members", response_model=ProjectMemberResponse, status_code=status.HTTP_201_CREATED)
 def add_project_member(
     member: ProjectMemberCreate, 
     db: Session = Depends(get_db)

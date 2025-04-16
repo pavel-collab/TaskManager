@@ -57,44 +57,44 @@ generate_random_date() {
 }
 
 roles=("LEAD" "DEVELOPER" "TESTER" "MANAGER" "DELIVERY")
-# # генерируем 200 пользователей
-# for i in {1..200}; do
-#     user_name="User_$i"
-#     user_password="password12$i"
-#     user_email=$(generate_random_email)
+# генерируем 200 пользователей
+for i in {1..200}; do
+    user_name="User_$i"
+    user_password="password12$i"
+    user_email=$(generate_random_email)
 
-#     random_role=$(printf "%s\n" "${roles[@]}" | shuf -n 1)
+    random_role=$(printf "%s\n" "${roles[@]}" | shuf -n 1)
 
-#     curl -X POST "http://$host:$port/api/users/" \
-#         -H "Content-Type: application/json" \
-#         -d "{\"username\": \"$user_name\", \
-#              \"email\": \"$user_email\", \
-#              \"password\": \"$user_password\", \
-#              \"role\": \"$random_role\"}"
-# done
+    curl -X POST "http://$host:$port/api/users/" \
+        -H "Content-Type: application/json" \
+        -d "{\"username\": \"$user_name\", \
+             \"email\": \"$user_email\", \
+             \"password\": \"$user_password\", \
+             \"role\": \"$random_role\"}"
+done
 
-# status=("TODO" "IN_PROGRESS" "DONE")
-# # генерируем проекты
-# for i in {1..20}; do
-#     project_title="ProjectTitle_$i"
-#     description=$(generate_random_string "$length")
-#     owner_id=$(generate_random_number 200)
+status=("TODO" "IN_PROGRESS" "DONE")
+# генерируем проекты
+for i in {1..20}; do
+    project_title="ProjectTitle_$i"
+    description=$(generate_random_string "$length")
+    owner_id=$(generate_random_number 200)
 
-#     # Выбор случайной строки
-#     random_status=$(printf "%s\n" "${status[@]}" | shuf -n 1)
+    # Выбор случайной строки
+    random_status=$(printf "%s\n" "${status[@]}" | shuf -n 1)
 
-#     random_start_date=$(generate_random_date "2023-01-01" "2023-01-31")
-#     random_end_date=$(generate_random_date "2024-01-01" "2025-12-31")
+    random_start_date=$(generate_random_date "2023-01-01" "2023-01-31")
+    random_end_date=$(generate_random_date "2024-01-01" "2025-12-31")
 
-#     curl -X POST "http://$host:$port/api/projects/" \
-#         -H "Content-Type: application/json" \
-#         -d "{\"title\": \"$project_title\", \
-#              \"description\": \"$description\", \
-#              \"owner_id\": $owner_id, \
-#              \"status\": \"$random_status\", \
-#              \"project_start_date\": \"$random_start_date\", \
-#              \"project_end_date\": \"$random_end_date\"}"
-# done
+    curl -X POST "http://$host:$port/api/projects/" \
+        -H "Content-Type: application/json" \
+        -d "{\"title\": \"$project_title\", \
+             \"description\": \"$description\", \
+             \"owner_id\": $owner_id, \
+             \"status\": \"$random_status\", \
+             \"project_start_date\": \"$random_start_date\", \
+             \"project_end_date\": \"$random_end_date\"}"
+done
 
 status=("TODO" "IN_PROGRESS" "DONE")
 complexity=("LOW" "MEDIUM" "HIGH")
@@ -122,4 +122,28 @@ for i in {1..50}; do
              \"assign_id\": $assign_id, \
              \"task_start_date\": \"$random_start_date\", \
              \"task_end_date\": \"$random_end_date\"}"
+done
+
+for i in {1..100}; do
+    random_task_id=$(generate_random_number 50)
+    random_user_id=$(generate_random_number 200)
+    random_comment=$(generate_random_string 200)
+
+    curl -X POST "http://$host:$port/api/comments" \
+        -H "Content-Type: application/json" \
+        -d "{\"task_id\": \"$random_task_id\", \
+             \"user_id\": \"$random_user_id\", \
+             \"comment\": \"$random_comment\"}"
+done
+
+for i in {1..20}; do
+    random_project_id=$(generate_random_number 20)
+    random_user_id=$(generate_random_number 200)
+    random_role=$(printf "%s\n" "${roles[@]}" | shuf -n 1)
+
+    curl -X POST "http://$host:$port/api/project_members" \
+        -H "Content-Type: application/json" \
+        -d "{\"project_id\": \"$random_project_id\", \
+             \"user_id\": \"$random_user_id\", \
+             \"role\": \"$random_role\"}"
 done
