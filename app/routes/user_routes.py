@@ -15,7 +15,9 @@ class UserCreate(BaseModel):
     email: str
     password: str
     role: str
+    rating: int
     
+#TODO: сделать множество классов для обновления пользовательской информации, либо сделать поля необязательными
 class UserUpdate(BaseModel):
     username: str = None
     email: str = None
@@ -27,7 +29,8 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = User(username=user.username, 
                    email=user.email, 
                    hashed_password=hashed_password,
-                   role=user.role)
+                   role=user.role,
+                   rating=user.rating)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

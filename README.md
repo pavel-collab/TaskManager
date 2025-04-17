@@ -37,7 +37,8 @@ curl -X POST "http://127.0.0.1:8000/api/users/" \
     -d "{\"username\": \"john_doe\", \
          \"email\": \"john@example.com\", \
          \"password\": \"password123\", \
-         \"role\": \"DEVELOPER\"}"
+         \"role\": \"DEVELOPER\", \
+         \"rating\": 20}"
 ```
 Получить список всех пользователей
 ```
