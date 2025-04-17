@@ -225,3 +225,14 @@ curl -X POST http://localhost:8000/api/apply-distribution \
          \"127\":[25], \
          \"186\":[42]}"
 ```
+
+#### Система приоритетов задач
+
+Алгоритм устанавливаем приоритеты для задач, учитывая сроки выполнения и сложность задачи.
+```
+curl -X GET "http://localhost:8000/api/ranked-tasks"
+```
+Аналогичный алгоритм для проектов
+```
+curl -X GET "http://localhost:8000/api/ranked-projects"
+```
