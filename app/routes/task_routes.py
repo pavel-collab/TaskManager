@@ -195,37 +195,33 @@ def apply_distribution(distribution: Dict[int, List[int]], db: Session = Depends
 def get_ranked_tasks(db: Session = Depends(get_db)) -> List[dict]:
     now = datetime.utcnow()
 
-    # Получаем все задачи в нужных статусах
     tasks = db.query(Task).filter(Task.status.in_([Status.TODO, Status.IN_PROGRESS])).all()
 
     def task_priority(task: Task):
-        # Если задача ещё не началась — штраф
-        not_started = task.task_start_date > now if task.task_start_date else False
-        start_penalty = 1 if not_started else 0
+        if task.task_start_date and task.task_start_date > now:
+            return 0  # задача ещё не началась
 
-        # Сколько времени осталось до дедлайна
-        time_to_deadline = (task.task_end_date - now).total_seconds() if task.task_end_date else float("inf")
-        
-        # Сложность
+        if not task.task_end_date:
+            return 0.1  # минимальный приоритет, если нет дедлайна
+
+        # Время до окончания в часах
+        hours_left = (task.task_end_date - now).total_seconds() / 3600
+        hours_left = max(1, hours_left)  # защита от деления на ноль или прошлого
+
         difficulty = complexity_weight.get(task.complexity, 1)
 
-        # Чем ниже score — тем выше приоритет
-        return (
-            start_penalty * 1000000 +  # большие штрафы для будущих задач
-            time_to_deadline / difficulty  # быстрее дедлайн + выше сложность = выше приоритет
-        )
+        # Чем меньше времени и выше сложность — тем выше приоритет
+        return round((difficulty / hours_left) * 100, 2)
 
-    # Сортировка задач по приоритету (наименьший score — самый важный)
-    tasks.sort(key=task_priority)
+    tasks.sort(key=task_priority, reverse=True)  # чем выше score — тем выше в списке
 
-    # Подготовка результата
     ranked_result = [
         {
             "id": task.id,
             "title": task.title,
             "start_date": task.task_start_date,
             "end_date": task.task_end_date,
-            "complexity": task.complexity,
+            "difficulty": task.complexity,
             "status": task.status,
             "priority_score": task_priority(task)
         }
