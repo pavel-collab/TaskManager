@@ -2,9 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models.task import Task
-from app.utils.utils import Status
+from app.utils.utils import Status, Complexity, complexity_weight
 from app.models.project import Project
 from pydantic import BaseModel
+from typing import Dict, List
+from app.models.user import User
 
 router = APIRouter()
 
@@ -117,3 +119,66 @@ def delete_task(task_title: str, db: Session = Depends(get_db)):
     db.delete(task)
     db.commit()
     return {"message": "Task deleted"}
+
+@router.get("/task-distribution")
+def distribute_tasks(db: Session = Depends(get_db)) -> Dict[int, List[int]]:
+    # Получаем всех пользователей
+    users = db.query(User).all()
+
+    # Получаем все задачи со статусом "нужно сделать"
+    tasks = db.query(Task).filter(Task.status == Status.TODO).all()
+
+    # Строим список активных задач у пользователей
+    user_load = {
+        user.id: {
+            "rating": user.rating,
+            "tasks": db.query(Task).filter(
+                Task.assign_id == user.id,
+                Task.status.in_([Status.TODO, Status.IN_PROGRESS])
+            ).count(),
+            "assigned_tasks": []  # сюда будем класть id назначенных задач
+        }
+        for user in users
+    }
+
+    # Сортируем задачи по сложности (от сложной к легкой)
+    tasks.sort(key=lambda t: complexity_weight.get(t.complexity, 1), reverse=True)
+
+    # Функция для вычисления приоритета назначения задачи
+    def assignment_score(user_id, task_difficulty):
+        user = user_load[user_id]
+        load_penalty = user["tasks"]
+        rating_bonus = user["rating"]
+        difficulty = complexity_weight.get(task_difficulty, 1)
+        # Чем выше результат, тем лучше кандидат
+        return rating_bonus / (1 + load_penalty * difficulty)
+
+    # Распределение задач
+    for task in tasks:
+        # Выбираем пользователя с наилучшим "assignment score"
+        best_user_id = max(user_load.keys(), key=lambda uid: assignment_score(uid, task.complexity))
+        user_load[best_user_id]["assigned_tasks"].append(task.id)
+        user_load[best_user_id]["tasks"] += 1  # Увеличиваем нагрузку
+
+    # Подготовим ответ
+    distribution_result = {
+        user_id: info["assigned_tasks"]
+        for user_id, info in user_load.items()
+        if info["assigned_tasks"]
+    }
+
+    return distribution_result
+
+@router.post("/apply-distribution")
+def apply_distribution(distribution: Dict[int, List[int]], db: Session = Depends(get_db)):
+    try:
+        for user_id, task_ids in distribution.items():
+            # Обновляем assign_id у задач
+            db.query(Task).filter(Task.id.in_(task_ids)).update(
+                {Task.assign_id: user_id}, synchronize_session="fetch"
+            )
+        db.commit()
+        return {"detail": "Task assignment updated successfully."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update assignments: {str(e)}")

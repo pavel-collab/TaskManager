@@ -18,3 +18,9 @@ class Complexity(enum.Enum):
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
+    
+complexity_weight ={
+    Complexity.LOW: 1,
+    Complexity.MEDIUM: 2,
+    Complexity.HIGH: 3
+}
