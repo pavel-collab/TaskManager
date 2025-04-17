@@ -4,6 +4,8 @@ from app.db import get_db
 from app.models.project import Project
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
+from typing import List
 
 router = APIRouter()
 
@@ -75,3 +77,36 @@ def delete_project(project_title: str, db: Session = Depends(get_db)):
     db.delete(db_project)
     db.commit()
     return {"message": "Project deleted"}
+
+@router.get("/ranked-projects")
+def get_ranked_projects(db: Session = Depends(get_db)) -> List[dict]:
+    now = datetime.utcnow()
+
+    projects = db.query(Project).all()
+
+    def project_priority(project: Project):
+        if project.project_start_date and project.project_start_date > now:
+            return 0  # проект ещё не начался
+
+        if not project.project_end_date:
+            return 0.1  # без дедлайна — почти минимальный приоритет
+
+        hours_left = (project.project_end_date - now).total_seconds() / 3600
+        hours_left = max(1, hours_left)
+
+        return round((1 / hours_left) * 100, 2)
+
+    projects.sort(key=project_priority, reverse=True)
+
+    ranked_result = [
+        {
+            "id": project.id,
+            "name": project.title,
+            "start_date": project.project_start_date,
+            "end_date": project.project_end_date,
+            "priority_score": project_priority(project)
+        }
+        for project in projects
+    ]
+
+    return ranked_result
