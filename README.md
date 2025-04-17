@@ -236,3 +236,14 @@ curl -X GET "http://localhost:8000/api/ranked-tasks"
 ```
 curl -X GET "http://localhost:8000/api/ranked-projects"
 ```
+
+#### For developers
+
+Python code formating. We're using pyformat 
+```
+pyformat -i -r -a --remove-all-unused-imports --remove-unused-variables ./
+```
+and check code quality via pylint
+```
+pylint ./ > pylint_report.txt
+```
