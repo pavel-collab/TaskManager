@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from typing import Dict, List
 from app.models.user import User
 from app.models.project_members import ProjectMembers
+from datetime import datetime
 
 router = APIRouter()
 
@@ -189,3 +190,46 @@ def apply_distribution(distribution: Dict[int, List[int]], db: Session = Depends
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to update assignments: {str(e)}")
+    
+@router.get("/ranked-tasks")
+def get_ranked_tasks(db: Session = Depends(get_db)) -> List[dict]:
+    now = datetime.utcnow()
+
+    # Получаем все задачи в нужных статусах
+    tasks = db.query(Task).filter(Task.status.in_([Status.TODO, Status.IN_PROGRESS])).all()
+
+    def task_priority(task: Task):
+        # Если задача ещё не началась — штраф
+        not_started = task.task_start_date > now if task.task_start_date else False
+        start_penalty = 1 if not_started else 0
+
+        # Сколько времени осталось до дедлайна
+        time_to_deadline = (task.task_end_date - now).total_seconds() if task.task_end_date else float("inf")
+        
+        # Сложность
+        difficulty = complexity_weight.get(task.complexity, 1)
+
+        # Чем ниже score — тем выше приоритет
+        return (
+            start_penalty * 1000000 +  # большие штрафы для будущих задач
+            time_to_deadline / difficulty  # быстрее дедлайн + выше сложность = выше приоритет
+        )
+
+    # Сортировка задач по приоритету (наименьший score — самый важный)
+    tasks.sort(key=task_priority)
+
+    # Подготовка результата
+    ranked_result = [
+        {
+            "id": task.id,
+            "title": task.title,
+            "start_date": task.task_start_date,
+            "end_date": task.task_end_date,
+            "complexity": task.complexity,
+            "status": task.status,
+            "priority_score": task_priority(task)
+        }
+        for task in tasks
+    ]
+
+    return ranked_result
