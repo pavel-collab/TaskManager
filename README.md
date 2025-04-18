@@ -3,18 +3,9 @@
 ![Архитектура базы](/images/relationships.real.large.png)
 
 ### Запуск
-Запускаем базу данных в докере
+Поднимаем приложение в докере с помощью docker-compose
 ```
-docker-compose up -d
-```
-Можно убедиться, что база поднялась
-```
-docker exec -it task-trasker-db psql postgresql://postgres:1234@localhost:5432/
-```
-
-Запускаем приложение
-```
-uvicorn main:app --reload
+docker-compose up --build -d
 ```
 
 Используем скрипт, чтобы заполнить базу данными для демонстрации.
@@ -23,16 +14,15 @@ uvicorn main:app --reload
 ```
 
 ### Using Swagger UI
-Go to the http://localhost:8000/docs
+Go to the http://localhost:8080/docs
 
 ### Requests
-
 
 #### Работа с пользователями
 
 Создание пользователя
 ```
-curl -X POST "http://127.0.0.1:8000/api/users/" \
+curl -X POST "http://127.0.0.1:8080/api/users/" \
     -H "Content-Type: application/json" \
     -d "{\"username\": \"john_doe\", \
          \"email\": \"john@example.com\", \
@@ -42,15 +32,15 @@ curl -X POST "http://127.0.0.1:8000/api/users/" \
 ```
 Получить список всех пользователей
 ```
-curl -X GET "http://127.0.0.1:8000/api/users/"
+curl -X GET "http://127.0.0.1:8080/api/users/"
 ```
 Получить пользователя по id
 ```
-curl -X GET "http://127.0.0.1:8000/api/users/1"
+curl -X GET "http://127.0.0.1:8080/api/users/1"
 ```
 Изменить данные пользователя
 ```
-curl -X PUT "http://localhost:8000/api/users/1" \
+curl -X PUT "http://localhost:8080/api/users/1" \
       -H "Content-Type: application/json" \
       -d "{\"username\": \"john_doe\", \
            \"email\": \"john@example.com\", \
@@ -59,14 +49,14 @@ curl -X PUT "http://localhost:8000/api/users/1" \
 ```
 Удаление пользователя
 ```
-curl -X DELETE "http://localhost:8000/api/users/john_doe" 
+curl -X DELETE "http://localhost:8080/api/users/john_doe" 
 ```
 
 #### Работа с проектами
 
 Создать проект
 ```
-curl -X POST "http://127.0.0.1:8000/api/projects/" \
+curl -X POST "http://127.0.0.1:8080/api/projects/" \
     -H "Content-Type: application/json" \
     -d "{\"title\": \"Project 1\", \
          \"description\": \"My first project\", \
@@ -77,15 +67,15 @@ curl -X POST "http://127.0.0.1:8000/api/projects/" \
 ```
 Список всех проектов
 ```
-curl -X GET "http://127.0.0.1:8000/api/projects/"
+curl -X GET "http://127.0.0.1:8080/api/projects/"
 ```
 Получить проект по id
 ```
-curl -X GET "http://127.0.0.1:8000/api/projects/1"
+curl -X GET "http://127.0.0.1:8080/api/projects/1"
 ```
 Обновление данных проекта
 ```
-curl -X PUT "http://localhost:8000/api/projects/1" \
+curl -X PUT "http://localhost:8080/api/projects/1" \
     -H "Content-Type: application/json" \
     -d "{\"title\": \"Project new\", \
          \"description\": \"My first project\", \
@@ -96,14 +86,14 @@ curl -X PUT "http://localhost:8000/api/projects/1" \
 ```
 Удаление проекта
 ```
-curl -X DELETE "http://localhost:8000/api/projects/ProjectTitle_1"
+curl -X DELETE "http://localhost:8080/api/projects/ProjectTitle_1"
 ```
 
 #### Работа с задачами
 
 Создать задачу
 ```
-curl -X POST "http://127.0.0.1:8000/api/tasks/" \
+curl -X POST "http://127.0.0.1:8080/api/tasks/" \
     -H "Content-Type: application/json" \
     -d "{\"title\": \"Task 1\", \
          \"description\": \"Complete the API\", \
@@ -116,15 +106,15 @@ curl -X POST "http://127.0.0.1:8000/api/tasks/" \
 ```
 Получить список всех задач
 ```
-curl -X GET "http://127.0.0.1:8000/api/tasks/"
+curl -X GET "http://127.0.0.1:8080/api/tasks/"
 ```
 Получить задачу по id
 ```
-curl -X GET "http://127.0.0.1:8000/api/tasks/1"
+curl -X GET "http://127.0.0.1:8080/api/tasks/1"
 ```
 Изменить параметры задачи
 ```
-curl -X PUT "http://localhost:8000/api/tasks/1" \
+curl -X PUT "http://localhost:8080/api/tasks/1" \
      -H "Content-Type: application/json" \
      -d "{\"title\": \"NewImportantTask\", \
          \"description\": \"Complete the API\", \
@@ -137,14 +127,14 @@ curl -X PUT "http://localhost:8000/api/tasks/1" \
 ```
 Удалить задачу
 ```
-curl -X DELETE "http://localhost:8000/api/tasks/NewImportantTask"
+curl -X DELETE "http://localhost:8080/api/tasks/NewImportantTask"
 ```
 
 #### Работа с комментариями
 
 Создать новую запись
 ```
-curl -X POST "http://localhost:8000/api/comments" \
+curl -X POST "http://localhost:8080/api/comments" \
         -H "Content-Type: application/json" \
         -d "{\"task_id\": 1, \
              \"user_id\": 13, \
@@ -152,15 +142,15 @@ curl -X POST "http://localhost:8000/api/comments" \
 ```
 Получить комментарий по уникальному id
 ```
-curl -X GET http://localhost:8000/api/comments/3
+curl -X GET http://localhost:8080/api/comments/3
 ```
 Получить все комментарии для задачи
 ```
-curl -X GET http://localhost:8000/api/comments/task/1
+curl -X GET http://localhost:8080/api/comments/task/1
 ```
 Изменить комментарий
 ```
-curl -X POST "http://localhost:8000/api/comments/1" \
+curl -X POST "http://localhost:8080/api/comments/1" \
         -H "Content-Type: application/json" \
         -d "{\"task_id\": \"1", \
              \"user_id\": \"13", \
@@ -168,14 +158,14 @@ curl -X POST "http://localhost:8000/api/comments/1" \
 ```
 Удалить комментарий
 ```
-curl -X DELETE http://localhost:8000/comments/1
+curl -X DELETE http://localhost:8080/comments/1
 ```
 
 #### Работа с членами проекта
 
 Добавление нового участника проекта
 ```
-curl -X POST "http://localhost:8000/api/project_members" \
+curl -X POST "http://localhost:8080/api/project_members" \
         -H "Content-Type: application/json" \
         -d "{\"project_id\": 1, \
              \"user_id\": 4, \
@@ -183,11 +173,11 @@ curl -X POST "http://localhost:8000/api/project_members" \
 ```
 Получить всех участников проекта с определенным id
 ```
-curl -X GET "http://localhost:8000/api/project_members/project/1"
+curl -X GET "http://localhost:8080/api/project_members/project/1"
 ```
 Изменить параметры некоторого пользователя
 ```
-curl -X PUT "http://localhost:8000/api/project_members/1/4" \
+curl -X PUT "http://localhost:8080/api/project_members/1/4" \
         -H "Content-Type: application/json" \
         -d "{\"project_id\": 1, \
              \"user_id\": 4, \
@@ -195,7 +185,7 @@ curl -X PUT "http://localhost:8000/api/project_members/1/4" \
 ```
 Удаление
 ```
-curl -X DELETE http://localhost:8000/api/project_members/1/4
+curl -X DELETE http://localhost:8080/api/project_members/1/4
 ```
 
 ### Бизнес-задачи
@@ -208,13 +198,13 @@ curl -X DELETE http://localhost:8000/api/project_members/1/4
 Получаем наиболее оптимальное распределение открытых задач между пользователями. При этом мы учитываем рейтинг пользователя, сложность задачи,
 количество задач, которыми занимается пользователь в данный момент и принадлежность пользователя к проекту, с которым связана задача.
 ```
-curl -X GET "http://localhost:8000/api/task-distribution"
+curl -X GET "http://localhost:8080/api/task-distribution"
 ```
 
 Результат работы алгоритма мы получаем в виде json соответствия: каждому ключу - идентификатору пользователя соответствуют идентификаторы задач, которые
 стоит ему назначить. Далее мы можем это сделать отдельным запросом.
 ```
-curl -X POST http://localhost:8000/api/apply-distribution \
+curl -X POST http://localhost:8080/api/apply-distribution \
     -H "Content-Type: application/json" \
     -d "{\"10\":[32,43,49], \
          \"24\":[5], \
@@ -230,11 +220,11 @@ curl -X POST http://localhost:8000/api/apply-distribution \
 
 Алгоритм устанавливаем приоритеты для задач, учитывая сроки выполнения и сложность задачи.
 ```
-curl -X GET "http://localhost:8000/api/ranked-tasks"
+curl -X GET "http://localhost:8080/api/ranked-tasks"
 ```
 Аналогичный алгоритм для проектов
 ```
-curl -X GET "http://localhost:8000/api/ranked-projects"
+curl -X GET "http://localhost:8080/api/ranked-projects"
 ```
 
 #### For developers

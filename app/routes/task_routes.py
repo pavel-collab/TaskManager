@@ -210,10 +210,8 @@ def apply_distribution(
         return {'detail': 'Task assignment updated successfully.'}
     except Exception as e:
         db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to update assignments: {
-                str(e)}")
+        raise HTTPException(status_code=500, 
+                            detail=f"Failed to update assignments: {str(e)}")
 
 
 @router.get('/ranked-tasks')
