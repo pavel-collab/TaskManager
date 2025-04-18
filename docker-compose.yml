@@ -10,7 +10,8 @@ services:
       POSTGRES_PASSWORD: 1234
     volumes:
       - ./db_data:/var/lib/postgresql/data
-      - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf  # Монтируем файл конфигурации
+      - ./configs/postgresql.conf:/var/lib/postgresql/data/postgresql.conf  # Монтируем файл конфигурации
+      - ./init:/docker-entrypoint-initdb.d  # Подключаем директорию с инициализацией
     ports:
       - "5432:5432"
   
