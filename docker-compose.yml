@@ -14,6 +14,16 @@ services:
     # command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]  # Указываем путь к конфигурационному файлу
     ports:
       - "5432:5432"
+  
+  app:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    container_name: task-trasker-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
 
 volumes:
   db_data:
