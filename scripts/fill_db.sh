@@ -56,12 +56,14 @@ generate_random_date() {
     echo "$random_date"
 }
 
+echo "GENERATE USERS INFO"
 roles=("LEAD" "DEVELOPER" "TESTER" "MANAGER" "DELIVERY")
 # генерируем 200 пользователей
 for i in {1..200}; do
     user_name="User_$i"
     user_password="password12$i"
     user_email=$(generate_random_email)
+    random_raiting=$(generate_random_number 100)
 
     random_role=$(printf "%s\n" "${roles[@]}" | shuf -n 1)
 
@@ -70,9 +72,11 @@ for i in {1..200}; do
         -d "{\"username\": \"$user_name\", \
              \"email\": \"$user_email\", \
              \"password\": \"$user_password\", \
-             \"role\": \"$random_role\"}"
+             \"role\": \"$random_role\", \
+             \"rating\": \"$random_raiting\"}"
 done
 
+echo "GENERATE PROJECTS"
 status=("TODO" "IN_PROGRESS" "DONE")
 # генерируем проекты
 for i in {1..20}; do
@@ -96,6 +100,7 @@ for i in {1..20}; do
              \"project_end_date\": \"$random_end_date\"}"
 done
 
+echo "GENERATE TASKS"
 status=("TODO" "IN_PROGRESS" "DONE")
 complexity=("LOW" "MEDIUM" "HIGH")
 # генерируем задачи
@@ -124,6 +129,7 @@ for i in {1..50}; do
              \"task_end_date\": \"$random_end_date\"}"
 done
 
+echo "GENERATE COMMENTS"
 for i in {1..100}; do
     random_task_id=$(generate_random_number 50)
     random_user_id=$(generate_random_number 200)
@@ -136,6 +142,7 @@ for i in {1..100}; do
              \"comment\": \"$random_comment\"}"
 done
 
+echo "GENERATE PROJECT MEMBERS"
 for i in {1..20}; do
     random_project_id=$(generate_random_number 20)
     random_user_id=$(generate_random_number 200)
