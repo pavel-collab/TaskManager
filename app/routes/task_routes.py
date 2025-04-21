@@ -9,6 +9,7 @@ from app.utils.utils import Status, complexity_weight
 from app.models.project import Project
 from app.models.user import User
 from app.models.project_members import ProjectMembers
+from app.routes.auth import UserResponse, get_current_user
 
 router = APIRouter()
 
@@ -137,8 +138,9 @@ def delete_task(task_title: str, db: Session = Depends(get_db)):
     return {'message': 'Task deleted'}
 
 
-@router.get('/task-distribution')
-def distribute_tasks(db: Session = Depends(get_db)) -> Dict[int, List[int]]:
+@router.get('/auth/task-distribution')
+def distribute_tasks(current_user: UserResponse = Depends(get_current_user), 
+                     db: Session = Depends(get_db)) -> Dict[int, List[int]]:
     users = db.query(User).all()
     tasks = db.query(Task).filter(Task.status == Status.TODO).all()
 
@@ -197,9 +199,10 @@ def distribute_tasks(db: Session = Depends(get_db)) -> Dict[int, List[int]]:
     return distribution_result
 
 
-@router.post('/apply-distribution')
-def apply_distribution(
-        distribution: Dict[int, List[int]], db: Session = Depends(get_db)):
+@router.post('/auth/apply-distribution')
+def apply_distribution(distribution: Dict[int, List[int]], 
+                       current_user: UserResponse = Depends(get_current_user),
+                       db: Session = Depends(get_db)):
     try:
         for user_id, task_ids in distribution.items():
             # Обновляем assign_id у задач
@@ -215,7 +218,8 @@ def apply_distribution(
 
 
 @router.get('/ranked-tasks')
-def get_ranked_tasks(db: Session = Depends(get_db)) -> List[dict]:
+def get_ranked_tasks(db: Session = Depends(get_db),
+                     current_user: UserResponse = Depends(get_current_user)) -> List[dict]:
     now = datetime.utcnow()
 
     tasks = db.query(Task).filter(Task.status.in_(

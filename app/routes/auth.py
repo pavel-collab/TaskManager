@@ -10,20 +10,13 @@ from app.routes.user_routes import get_user, UserCreate
 from app.models.user import User
 from app.db import get_db
 
-#! pip install python-jose
+#TODO pip install python-jose
 
+#TODO: make an extraction the SECRET_KEY from env vars
 # Конфигурация
 SECRET_KEY = "your-secret-key-keep-it-secret"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-# # Временная "база данных"
-# fake_users_db = {
-#     "johndoe": {
-#         "username": "johndoe",
-#         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # secret
-#     }
-# }
 
 router = APIRouter()
 
@@ -51,11 +44,6 @@ def verify_password(plain_password, hashed_password):
 
 def get_password_hash(password):
     return pwd_context.hash(password)
-
-# def get_user(db, username: str):
-#     if username in db:
-#         user_dict = db[username]
-#         return UserInDB(**user_dict)
 
 def authenticate_user(username: str, password: str):
     user = get_user(username)
@@ -133,22 +121,3 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
-@router.get("/auth", response_model=UserResponse)
-async def read_users_me(current_user: UserResponse = Depends(get_current_user)):
-    return current_user
-
-'''
-Работа с авторизацией.
-
-Для начала регистрируем пользователя, для этого делаем запрос 
-curl -X POST "http://localhost:8000/api/register?username=testuser&password=testpass"
-
-После этого получаем токен для пользователя
-curl -X POST "http://localhost:8000/api/token" -d "username=testuser&password=testpass"
-
-И далее делаем запрос к защищенному эндпоинту через токен доступа
-curl -X GET "http://localhost:8000/api/auth" -H "Authorization: Bearer YOUR_TOKEN"
-
-на место YOUR_TOKEN вставляем полученный ранее токен.
-'''

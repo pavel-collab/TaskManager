@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from typing import List
+from app.routes.auth import UserResponse, get_current_user
 
 router = APIRouter()
 
@@ -95,7 +96,8 @@ def delete_project(project_title: str, db: Session = Depends(get_db)):
 
 
 @router.get('/ranked-projects')
-def get_ranked_projects(db: Session = Depends(get_db)) -> List[dict]:
+def get_ranked_projects(db: Session = Depends(get_db),
+                        current_user: UserResponse = Depends(get_current_user)) -> List[dict]:
     now = datetime.utcnow()
 
     projects = db.query(Project).all()
