@@ -5,6 +5,7 @@ from app.routes import project_routes
 from app.routes import user_routes
 from app.routes import comments_routes
 from app.routes import project_members_routes
+from app.routes import auth
 
 app = FastAPI()
 
@@ -18,7 +19,7 @@ app.include_router(
     project_members_routes.router,
     prefix='/api',
     tags=['project_members'])
-
+app.include_router(auth.router, prefix="/api")
 
 @app.get('/')
 def read_root():

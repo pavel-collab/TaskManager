@@ -53,8 +53,6 @@ def get_users(db: Session = Depends(get_db)):
 
 # TODO: тут можно сделать запрос конкретного польщователя через агргументы запроса
 # Функция для получения конкретного пользователя по id
-
-
 @router.get('/users/{user_id}')
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -63,8 +61,6 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     return user
 
 # Функция для обновления информации о пользователе
-
-
 @router.put('/users/{user_id}')
 def update_user(user_id: int, user_update: UserUpdate,
                 db: Session = Depends(get_db)):
@@ -84,8 +80,6 @@ def update_user(user_id: int, user_update: UserUpdate,
 
 # TODO: добавить каскадное удаление соответствующих сущностей
 # Функция для удаления пользователя
-
-
 @router.delete('/users/{username}')
 def delete_user(username: str, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == username).first()
@@ -95,3 +89,10 @@ def delete_user(username: str, db: Session = Depends(get_db)):
     db.delete(db_user)
     db.commit()
     return {'message': 'User deleted'}
+
+def get_user(username):
+    db = next(get_db())
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return None
+    return user
