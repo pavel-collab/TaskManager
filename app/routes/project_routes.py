@@ -95,7 +95,7 @@ def delete_project(project_title: str, db: Session = Depends(get_db)):
     return {'message': 'Project deleted'}
 
 
-@router.get('/ranked-projects')
+@router.get('/auth/ranked-projects')
 def get_ranked_projects(db: Session = Depends(get_db),
                         current_user: UserResponse = Depends(get_current_user)) -> List[dict]:
     now = datetime.utcnow()

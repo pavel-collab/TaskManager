@@ -196,15 +196,17 @@ curl -X DELETE http://localhost:8080/api/project_members/1/4
 Для начала регистрируем пользователя, для этого делаем запрос (если у вас уже есть зарегистрированный пользователь, этот шаг можно пропустить).
 Этот пользователь будет автоматически добавлен в базу пользователей.
 ```
-curl -X POST "http://localhost:8000/api/register?username=testuser&password=testpass"
+curl -X POST "http://localhost:8080/api/register?username=admin&password=admin"
 ```
 
 После этого получаем токен для пользователя
 ```
-curl -X POST "http://localhost:8000/api/token" -d "username=testuser&password=testpass"
+curl -X POST "http://localhost:8080/api/token" -d "username=admin&password=admin"
 ```
-
-Данный токен необходимо сохранить для дальнейшей работы.
+Для удобства сразу сохраним токен в переменную среды
+```
+export TOKEN=$(curl -s http://localhost:8080/api/token -d username\=admin\&password\=admin | jq -r '.access_token')
+```
 
 ### Бизнес-задачи
 
@@ -220,16 +222,15 @@ curl -X POST "http://localhost:8000/api/token" -d "username=testuser&password=te
 
 Делаем запрос с аутентификацией и запросом к решению задачи
 ```
-curl -X GET "http://localhost:8080/api/task-distribution" -H "Authorization: Bearer YOUR_TOKEN"
+curl -X GET "http://localhost:8080/api/auth/task-distribution" -H "Authorization: Bearer $TOKEN" | jq .
 ```
-вместо YOUR_TOKEN вставьте токен, который вы получили на предыдущем шаге.
 
 Результат работы алгоритма мы получаем в виде json соответствия: каждому ключу - идентификатору пользователя соответствуют идентификаторы задач, которые
 стоит ему назначить. Далее мы можем это сделать отдельным запросом. Не забудьте про токен аутентификации.
 ```
-curl -X POST http://localhost:8080/api/apply-distribution \
+curl -X POST http://localhost:8080/api/auth/apply-distribution \
     -H "Content-Type: application/json" \
-    -H "Authorization: Bearer YOUR_TOKEN" \
+    -H "Authorization: Bearer $TOKEN" \
     -d "{\"10\":[32,43,49], \
          \"24\":[5], \
          \"44\":[13], \
@@ -237,18 +238,18 @@ curl -X POST http://localhost:8080/api/apply-distribution \
          \"103\":[48], \
          \"115\":[29], \
          \"127\":[25], \
-         \"186\":[42]}"
+         \"186\":[42]}" | jq .
 ```
 
 #### Система приоритетов задач
 
 Алгоритм устанавливаем приоритеты для задач, учитывая сроки выполнения и сложность задачи.
 ```
-curl -X GET "http://localhost:8080/api/ranked-tasks" -H "Authorization: Bearer YOUR_TOKEN"
+curl -X GET "http://localhost:8080/api/auth/ranked-tasks" -H "Authorization: Bearer $TOKEN" | jq .
 ```
 Аналогичный алгоритм для проектов
 ```
-curl -X GET "http://localhost:8080/api/ranked-projects" -H "Authorization: Bearer YOUR_TOKEN"
+curl -X GET "http://localhost:8080/api/auth/ranked-projects" -H "Authorization: Bearer $TOKEN" | jq .
 ```
 
 #### Тестирование продукта

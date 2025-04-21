@@ -217,7 +217,7 @@ def apply_distribution(distribution: Dict[int, List[int]],
                             detail=f"Failed to update assignments: {str(e)}")
 
 
-@router.get('/ranked-tasks')
+@router.get('/auth/ranked-tasks')
 def get_ranked_tasks(db: Session = Depends(get_db),
                      current_user: UserResponse = Depends(get_current_user)) -> List[dict]:
     now = datetime.utcnow()

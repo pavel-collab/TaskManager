@@ -8,3 +8,4 @@ passlib
 pytest-cov
 python-jose
 httpx
+python-multipart
