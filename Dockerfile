@@ -6,10 +6,7 @@ RUN apt install -y libpq-dev
 
 WORKDIR /home/workdir
 COPY ./app /home/workdir/app
-COPY main.py /home/workdir/
-COPY tests /home/workdir/tests
+COPY ./tests /home/workdir/tests
 COPY requirements.txt /home/workdir/
 
 RUN pip install -r requirements.txt
-
-# ENTRYPOINT [ "uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8080" ]

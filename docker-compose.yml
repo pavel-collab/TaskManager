@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: task-trasker-app
-    command: "uvicorn main:app --reload --host 0.0.0.0 --port 8080"
+    command: "uvicorn app.main:app --reload --host 0.0.0.0 --port 8080"
     environment:
       DATABASE_URL: postgresql://postgres:1234@db:5432/postgres
     ports:
@@ -28,5 +28,21 @@ services:
     depends_on:
       - db
 
+  app_test:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-trasker-test
+    command: "pytest --cov=app ./tests/ --cov-report html:/home/test_report" # here we want to run tests in docker-comtainer
+    profiles:
+      - with-test
+    environment:
+      DATABASE_URL: postgresql://postgres:1234@db:5432/postgres
+    volumes:
+      - ./test_report:/home/test_report
+    depends_on:
+      - db
+
 volumes:
   db_data:
+  test_report:
