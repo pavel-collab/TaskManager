@@ -81,8 +81,8 @@ def helper_fill_projects(client, n_projects=10):
                 "description": generate_random_string(50),
                 "owner_id": random.randint(1, 10),
                 "status": choose_random_element(STATUS),
-                "project_start_date": generate_random_date(start_date, end_date),
-                "project_end_date": generate_random_date(start_date, end_date)
+                "project_start_date": str(generate_random_date(start_date, end_date)),
+                "project_end_date": str(generate_random_date(start_date, end_date))
             }
         )
         assert response.status_code == 200
@@ -101,8 +101,8 @@ def helper_fill_tasks(client, n_tasks=10):
                 "project_id": random.randint(1, 10),
                 "complexity": choose_random_element(COMPLEXITY),
                 "assign_id": random.randint(1, 10),
-                "task_start_date": generate_random_date(start_date, end_date),
-                "task_end_date": generate_random_date(start_date, end_date)
+                "task_start_date": str(generate_random_date(start_date, end_date)),
+                "task_end_date": str(generate_random_date(start_date, end_date))
             }
         )
         assert response.status_code == 200
