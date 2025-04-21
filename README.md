@@ -59,7 +59,7 @@ curl -X PUT "http://localhost:8000/api/users/1" \
 ```
 Удаление пользователя
 ```
-curl -X DELETE "http://localhost:8000/api/users/john_doe" 
+curl -X DELETE "http://localhost:8000/api/users/delete/john_doe" 
 ```
 
 #### Работа с проектами
@@ -235,6 +235,17 @@ curl -X GET "http://localhost:8000/api/ranked-tasks"
 Аналогичный алгоритм для проектов
 ```
 curl -X GET "http://localhost:8000/api/ranked-projects"
+```
+
+#### Тестирование продукта
+
+В проекте предусмотрин запуск юнит-тестов, которые тестируют базовую логику. Юнит-тесты применяются для проверки базовой функциональности
+в процессе жизненного цикла продукта, чтобы проверить, что базовые функции сохраняют ожидаемый от них результат.
+
+Для запуска тестов разверните базу и запустите тесты через pytest
+```
+docker up -d
+pytest ./tests/test_app.py
 ```
 
 #### For developers
