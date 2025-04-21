@@ -16,4 +16,3 @@ class Task(Base):
     assign_id = Column(Integer, ForeignKey('users.id'))
     task_start_date = Column(DateTime, nullable=False, default=datetime.utcnow)
     task_end_date = Column(DateTime, nullable=False, default=datetime.utcnow)
-

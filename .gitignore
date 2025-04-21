@@ -3,3 +3,5 @@ __pycache__
 .venv
 db_data
 tmp
+test_report
+pylint_report.txt

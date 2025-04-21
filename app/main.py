@@ -19,7 +19,8 @@ app.include_router(
     project_members_routes.router,
     prefix='/api',
     tags=['project_members'])
-app.include_router(auth.router, prefix="/api")
+app.include_router(auth.router, prefix='/api')
+
 
 @app.get('/')
 def read_root():

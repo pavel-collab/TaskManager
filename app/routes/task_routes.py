@@ -139,7 +139,7 @@ def delete_task(task_title: str, db: Session = Depends(get_db)):
 
 
 @router.get('/auth/task-distribution')
-def distribute_tasks(current_user: UserResponse = Depends(get_current_user), 
+def distribute_tasks(current_user: UserResponse = Depends(get_current_user),
                      db: Session = Depends(get_db)) -> Dict[int, List[int]]:
     users = db.query(User).all()
     tasks = db.query(Task).filter(Task.status == Status.TODO).all()
@@ -200,7 +200,7 @@ def distribute_tasks(current_user: UserResponse = Depends(get_current_user),
 
 
 @router.post('/auth/apply-distribution')
-def apply_distribution(distribution: Dict[int, List[int]], 
+def apply_distribution(distribution: Dict[int, List[int]],
                        current_user: UserResponse = Depends(get_current_user),
                        db: Session = Depends(get_db)):
     try:
@@ -213,7 +213,7 @@ def apply_distribution(distribution: Dict[int, List[int]],
         return {'detail': 'Task assignment updated successfully.'}
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, 
+        raise HTTPException(status_code=500,
                             detail=f"Failed to update assignments: {str(e)}")
 
 

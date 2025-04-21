@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str = os.environ.get(
-        'DATABASE_URL', 
+        'DATABASE_URL',
         'postgresql://postgres:1234@localhost:5432/postgres'
     )
     SECRET_KEY: str = ''

@@ -86,7 +86,8 @@ def update_comment(comment_id: int, comment: TaskCommentUpdate,
     return db_comment
 
 
-@router.delete('/comments/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/comments/{comment_id}',
+               status_code=status.HTTP_204_NO_CONTENT)
 def delete_comment(comment_id: int, db: Session = Depends(get_db)):
     """Delete a comment."""
     db_comment = db.query(TaskComments).filter(
