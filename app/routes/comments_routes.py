@@ -68,7 +68,7 @@ def read_comments_by_task(task_id: int, db: Session = Depends(get_db)):
     return comments
 
 
-@router.put('/{comment_id}', response_model=TaskCommentResponse)
+@router.put('/comments/{comment_id}', response_model=TaskCommentResponse)
 def update_comment(comment_id: int, comment: TaskCommentUpdate,
                    db: Session = Depends(get_db)):
     """Update a comment."""
@@ -86,7 +86,7 @@ def update_comment(comment_id: int, comment: TaskCommentUpdate,
     return db_comment
 
 
-@router.delete('/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/comments/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_comment(comment_id: int, db: Session = Depends(get_db)):
     """Delete a comment."""
     db_comment = db.query(TaskComments).filter(
