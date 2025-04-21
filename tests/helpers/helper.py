@@ -107,26 +107,26 @@ def helper_fill_tasks(client, n_tasks=10):
         )
         assert response.status_code == 200
 
-def helper_fill_comments(client, n_comments=10):
-    for i in range(n_comments):
-        response = client.post(
-            "/api/comments/",
-            json={
-                "task_id": random.randint(1, 10),
-                "user_id": random.randint(1, 10),
-                "comment": generate_random_string(100)
-            }
-        )
-        assert response.status_code == 200
+# def helper_fill_comments(client, n_comments=10):
+#     for i in range(n_comments):
+#         response = client.post(
+#             "/api/comments/",
+#             json={
+#                 "task_id": random.randint(1, 10),
+#                 "user_id": random.randint(1, 10),
+#                 "comment": generate_random_string(100)
+#             }
+#         )
+#         assert response.status_code == 200
     
-def helper_fill_project_members(client, n_project_members=10):
-    for i in range(n_project_members):
-        response = client.post(
-            "/api/project_members/",
-            json={
-                "project_id": random.randint(1, 10),
-                "user_id": random.randint(1, 10),
-                "role": choose_random_element(ROLES)
-            }
-        )
-        assert response.status_code == 200
+# def helper_fill_project_members(client, n_project_members=10):
+#     for i in range(n_project_members):
+#         response = client.post(
+#             "/api/project_members/",
+#             json={
+#                 "project_id": random.randint(1, 10),
+#                 "user_id": random.randint(1, 10),
+#                 "role": choose_random_element(ROLES)
+#             }
+#         )
+#         assert response.status_code == 200
