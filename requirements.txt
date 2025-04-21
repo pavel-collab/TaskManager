@@ -5,3 +5,5 @@ sqlalchemy
 pydantic_settings
 psycopg2
 passlib
+pytest-cov
+python-jose
