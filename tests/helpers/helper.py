@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 ROLES = ["LEAD", "DEVELOPER", "TESTER", "MANAGER", "DELIVERY"]
 STATUS = ["TODO", "IN_PROGRESS", "DONE"]
-COMPLEXITY = ["LOW" "MEDIUM" "HIGH"]
+COMPLEXITY = ["LOW", "MEDIUM", "HIGH"]
 
 def generate_random_string(length):
     """Генерирует случайную строку заданной длины."""
@@ -96,7 +96,7 @@ def helper_fill_tasks(client, n_tasks=10):
             "/api/tasks/",
             json={
                 "title": f"Task_{i}",
-                "decsription": generate_random_string(50),
+                "description": generate_random_string(50),
                 "status": choose_random_element(STATUS),
                 "project_id": random.randint(1, 10),
                 "complexity": choose_random_element(COMPLEXITY),
