@@ -1,12 +1,15 @@
+import os
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = 'postgresql://postgres:1234@localhost:5432/postgres'
+    DATABASE_URL: str = os.environ.get(
+        'DATABASE_URL', 
+        'postgresql://postgres:1234@localhost:5432/postgres'
+    )
     SECRET_KEY: str = ''
 
     class Config:

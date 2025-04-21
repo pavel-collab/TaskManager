@@ -57,6 +57,16 @@ def setup_db_for_test_comments():
     helper_fill_tasks(client=client)
     yield
 
+def setup_db_for_test_project_members():
+    try:
+        Base.metadata.drop_all(bind=engine)
+    except Exception as ex:
+        ...
+    Base.metadata.create_all(bind=engine)
+    helper_fill_users(client=client)
+    helper_fill_projects(client=client)
+    yield
+
 ################################################################TESTS FOR USERS################################################################
 
 def test_create_user(setup_db_for_test_users):
@@ -410,6 +420,65 @@ def test_delete_nonexistent_comment():
     assert response.status_code == 404  # Ожидаем, что комментарий не найден
 
 ################################################################TESTS FOR PROJECT MEMEBERS################################################################
+
+# Тест для добавления нового участника проекта
+def test_add_project_member():
+    response = client.post(
+        "/api/project_members",
+        json={
+            "project_id": 1,
+            "user_id": 4,
+            "role": "LEAD",
+        },
+    )
+    assert response.status_code == 200  # Ожидаем, что участник проекта был добавлен
+    assert response.json()["role"] == "LEAD"
+
+# Тест для получения всех участников проекта с определенным id
+def test_get_project_members():
+    response = client.get("/api/project_members/project/1")
+    assert response.status_code == 200  # Ожидаем успешный ответ
+    assert isinstance(response.json(), list)  # Ожидаем, что ответ - это список
+
+# Негативный тест для получения участников несуществующего проекта
+def test_get_nonexistent_project_members():
+    response = client.get("/api/project_members/project/999")  # Предполагаем, что проект с id 999 не существует
+    assert response.status_code == 404  # Ожидаем, что проект не найден
+
+# Тест для изменения параметров участника проекта
+def test_update_project_member():
+    response = client.put(
+        "/api/project_members/1/4",
+        json={
+            "project_id": 1,
+            "user_id": 4,
+            "role": "MANAGER",
+        },
+    )
+    assert response.status_code == 200  # Ожидаем успешный ответ
+    assert response.json()["role"] == "MANAGER"
+
+# Негативный тест для изменения параметров несуществующего участника проекта
+def test_update_nonexistent_project_member():
+    response = client.put(
+        "/api/project_members/999/4",
+        json={
+            "project_id": 1,
+            "user_id": 4,
+            "role": "MANAGER",
+        },
+    )
+    assert response.status_code == 404  # Ожидаем, что участник не найден
+
+# Тест для удаления участника проекта
+def test_delete_project_member():
+    response = client.delete("/api/project_members/1/4")
+    assert response.status_code == 204  # Ожидаем, что участник проекта был удален
+
+# Негативный тест для удаления несуществующего участника проекта
+def test_delete_nonexistent_project_member():
+    response = client.delete("/api/project_members/999/4")  # Предполагаем, что участник с id 999 не существует
+    assert response.status_code == 404  # Ожидаем, что участник не найден
 
 ################################################################TESTS FOR TASK DESTRIBUTION################################################################
 

@@ -10,10 +10,23 @@ services:
       POSTGRES_PASSWORD: 1234
     volumes:
       - ./db_data:/var/lib/postgresql/data
-      - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf  # Монтируем файл конфигурации
-    # command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]  # Указываем путь к конфигурационному файлу
+      - ./configs/postgresql.conf:/var/lib/postgresql/data/postgresql.conf  # Монтируем файл конфигурации
+      - ./init:/docker-entrypoint-initdb.d  # Подключаем директорию с инициализацией
     ports:
       - "5432:5432"
+  
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-trasker-app
+    command: "uvicorn main:app --reload --host 0.0.0.0 --port 8080"
+    environment:
+      DATABASE_URL: postgresql://postgres:1234@db:5432/postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
 
 volumes:
   db_data:
