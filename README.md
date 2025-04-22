@@ -2,6 +2,10 @@
 
 ![Архитектура базы](/images/relationships.real.large.png)
 
+### Архитектура приложения
+
+![Архитектура приложения](/images/ApplicationStruct.png)
+
 ### Запуск
 Поднимаем приложение в докере с помощью docker-compose
 ```
@@ -15,6 +19,10 @@ docker-compose up --build -d
 
 ### Using Swagger UI
 Go to the http://localhost:8080/docs
+
+При переходе по этому адресу откроется SwagerUI. В этом интерфейсе можно потрогать различные ручки
+![SwaggerUI](/images/SvagetUI_1.png)
+![SwaggerUI](/images/SvagerUI_2.png)
 
 ### Запросы
 
@@ -97,6 +105,20 @@ docker-compose с профилем with-tests. После прогонки те�
 docker-compose --profile with-test up -d --build
 ```
 
+![Тесты в докере](/images/ApplicationStructExtended.png)
+
+Кроме того, можно использовать внешние приложения для тестирования Rest API, такие как Postman
+
+![Тесты в postman](/images/PostmanTests_1.png)
+
+![Тесты в postman](/images/PostmanTests_2.png)
+
+![Тесты в postman](/images/PostmanTesing.png)
+
+Отчеты от покрытии кода
+
+![Отчет о покрытии](/images/CodeCoverage.png)
+
 #### For developers
 
 Python code formating. We're using pyformat 
@@ -107,3 +129,6 @@ and check code quality via pylint
 ```
 pylint ./ > pylint_report.txt
 ```
+
+Отчет линтера
+![Отчет линтера](/images/LinterReport.png)
